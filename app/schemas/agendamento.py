@@ -1,4 +1,5 @@
 from pydantic import BaseModel, Field
+from pydantic import ConfigDict
 from datetime import datetime
 from enum import Enum
 from typing import Optional
@@ -29,12 +30,10 @@ class AgendamentoResponse(BaseModel):
     tipo_comunicacao: TipoComunicacaoEnum
     status: StatusAgendamentoEnum
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 class AgendamentoStatusResponse(BaseModel):
     id: int
     status: StatusAgendamentoEnum
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)

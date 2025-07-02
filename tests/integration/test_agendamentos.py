@@ -5,10 +5,14 @@ from sqlalchemy.orm import sessionmaker
 from app.models.agendamento import Base
 from main import app
 from app.database import connection
+import os
 
-# Cria um banco de dados em memória para os testes
-SQLALCHEMY_DATABASE_URL = "sqlite:///:memory:"
-engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
+# Usa a variável de ambiente DATABASE_URL para integração real com PostgreSQL
+db_url = os.getenv("DATABASE_URL")
+if not db_url or not db_url.startswith("postgresql"):
+    raise RuntimeError("Para rodar os testes de integração, defina DATABASE_URL para um banco PostgreSQL de testes.")
+
+engine = create_engine(db_url)
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 # Cria as tabelas no banco de dados de teste

@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: notiflow_user
+      POSTGRES_PASSWORD: minhasenha
+      POSTGRES_DB: notiflow_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  app:
+    build: .
+    command: uvicorn main:app --host 0.0.0.0 --reload
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql+psycopg2://notiflow_user:minhasenha@db:5432/notiflow_db
+      PYTHONPATH: /code
+    depends_on:
+      - db
+
+volumes:
+  pgdata:
